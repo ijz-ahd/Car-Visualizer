@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="shortcut icon"
+      href="https://media-exp1.licdn.com/dms/image/C4E0BAQHCs1XND0-BCw/company-logo_200_200/0/1519870879675?e=2159024400&v=beta&t=U1PQGWY4HjryJQGa-EuLZZD9Evdyh5yHHwZYzSX-zE8"
+    />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Car-Visualizer</title>
+  </head>
+  <body>
+    <span class="drag-notice" id="js-drag-notice"
+      >Drag to rotate 360&#176;</span
+    >
+    <canvas id="c"></canvas>
+    <div class="header">
+      <h2 class="heading">Car Visualizer</h2>
+      <a class="button" href="./webvr.html">Experience Interior VR-360°</a>
+    </div>
+    <div class="controls">
+      <!-- This tray will be filled with colors via JS, and the ability to slide this panel will be added in with a lightweight slider script (no dependency used for this) -->
+      <div id="js-tray" class="tray">
+        <div id="js-tray-slide" class="tray__slide"></div>
+      </div>
+    </div>
+
+    <h3 class="heading_bottom">Made by ijz-ahd and team</h3>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
+      integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script> -->
+    <!-- gltf loader to load 3d object with .gltf extension -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r92/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- touch and scroll behaviour for the scene  -->
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
