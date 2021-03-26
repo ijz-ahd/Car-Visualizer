@@ -62,7 +62,7 @@ body {
   font-weight: 600;
   border: 1px solid #444444;
   background-color: transparent;
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: 15px;
   cursor: pointer;
   text-decoration: none;
@@ -102,7 +102,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 .option:hover {
   border-left: 5px solid white;
@@ -144,6 +143,7 @@ body {
   background-size: cover;
   border: 1px solid rgb(26, 25, 25);
   background-position: center;
+  cursor: pointer;
 }
 .tray__swatch:nth-child(5n + 5) {
   margin-right: 20px;
