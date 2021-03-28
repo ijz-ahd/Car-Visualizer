@@ -2,8 +2,106 @@ let cameraFar = 4;
 const BACKGROUND_COLOR = 0xf1f1f1;
 let theModel;
 let loaded = false;
-const modelPath = "model/scene.glb";
 const DRAG_NOTICE = document.getElementById("js-drag-notice");
+
+const canvas = document.getElementById("c");
+const selectCarModel = document.querySelector(".cars_option");
+let modelPath = selectCarModel.value;
+
+const vehiclePerformanceData = [
+  {
+    vehicleName: "Nissan GTR",
+    bodyType: "Coupe",
+    engineType: "twin-turbo V6",
+    maxTorque: "637 Nm",
+    maxSpeed: "205 mph",
+    acceleration: "2.5 s",
+    gearbox: "6-speed automatic",
+    coolant: "Antifreeze fluid",
+    cylinder: "twin-turbocharged 6-cylinder",
+    kerb: "3800 lb",
+    engMan: "Takumi",
+    price: "Rs. 21,200,000",
+  },
+  {
+    vehicleName: "Porsche 911 turbo",
+    bodyType: "fixed-head Coupe",
+    engineType: "turbo-charged petrol",
+    maxTorque: "353 Nm",
+    maxSpeed: "155 mph",
+    acceleration: "5.2 s",
+    gearbox: "4 speed manual",
+    coolant: "Air",
+    cylinder: "flat 6",
+    kerb: "2560 lb",
+    engMan: "Porsche",
+    price: "Rs. 30,800,000",
+  },
+];
+
+window.onload = () => (selectCarModel.disabled = false);
+selectCarModel.addEventListener("change", function (e) {
+  modelPath = e.target.value;
+  console.log(modelPath.includes("nissan"));
+  if (modelPath.includes("nissan")) {
+    document.getElementById("p_heading").innerHTML =
+      vehiclePerformanceData[0].vehicleName;
+    document.getElementById("p_bodytype").innerHTML =
+      vehiclePerformanceData[0].bodyType;
+    document.getElementById("p_engtype").innerHTML =
+      vehiclePerformanceData[0].engineType;
+    document.getElementById("p_engman").innerHTML =
+      vehiclePerformanceData[0].engMan;
+    document.getElementById("p_kerb").innerHTML =
+      vehiclePerformanceData[0].kerb;
+    document.getElementById("p_cylinder").innerHTML =
+      vehiclePerformanceData[0].cylinder;
+    document.getElementById("p_torque").innerHTML =
+      vehiclePerformanceData[0].maxTorque;
+    document.getElementById("p_acceleration").innerHTML =
+      vehiclePerformanceData[0].acceleration;
+    document.getElementById("p_speed").innerHTML =
+      vehiclePerformanceData[0].maxSpeed;
+    document.getElementById("p_gear").innerHTML =
+      vehiclePerformanceData[0].gearbox;
+    document.getElementById("p_coolant").innerHTML =
+      vehiclePerformanceData[0].coolant;
+    document.getElementById("price").innerHTML =
+      vehiclePerformanceData[0].price;
+
+    document.getElementById("interiorVR").href = "./webvr2.html";
+  } else {
+    document.getElementById("p_heading").innerHTML =
+      vehiclePerformanceData[1].vehicleName;
+    document.getElementById("p_bodytype").innerHTML =
+      vehiclePerformanceData[1].bodyType;
+    document.getElementById("p_engtype").innerHTML =
+      vehiclePerformanceData[1].engineType;
+    document.getElementById("p_engman").innerHTML =
+      vehiclePerformanceData[1].engMan;
+    document.getElementById("p_kerb").innerHTML =
+      vehiclePerformanceData[1].kerb;
+    document.getElementById("p_cylinder").innerHTML =
+      vehiclePerformanceData[1].cylinder;
+    document.getElementById("p_torque").innerHTML =
+      vehiclePerformanceData[1].maxTorque;
+    document.getElementById("p_acceleration").innerHTML =
+      vehiclePerformanceData[1].acceleration;
+    document.getElementById("p_speed").innerHTML =
+      vehiclePerformanceData[1].maxSpeed;
+    document.getElementById("p_gear").innerHTML =
+      vehiclePerformanceData[1].gearbox;
+    document.getElementById("p_coolant").innerHTML =
+      vehiclePerformanceData[1].coolant;
+    document.getElementById("price").innerHTML =
+      vehiclePerformanceData[1].price;
+
+    document.getElementById("interiorVR").href = "./webvr.html";
+  }
+
+  let canvasCleared = clearCanvas(theModel);
+  canvasCleared && loadGLBModel(modelPath);
+});
 
 const colors = [
   {
@@ -19,10 +117,10 @@ const colors = [
     color: "FFFFFF",
   },
   {
-    color: "66533C",
+    color: "670000",
   },
   {
-    color: "173A2F",
+    color: "002366",
   },
   {
     color: "153944",
@@ -31,7 +129,7 @@ const colors = [
     color: "27548D",
   },
   {
-    color: "438AAC",
+    color: "708090",
   },
   {
     color: "D55209",
@@ -45,8 +143,6 @@ const scene = new THREE.Scene();
 //setting up the scene background
 scene.background = new THREE.Color(BACKGROUND_COLOR);
 scene.fog = new THREE.Fog(BACKGROUND_COLOR, 20, 100);
-
-const canvas = document.querySelector("#c");
 
 //init renderer
 const renderer = new THREE.WebGLRenderer({
@@ -84,49 +180,64 @@ const secBody = new THREE.MeshPhongMaterial({
   shininess: 10,
 });
 
+const glass = new THREE.MeshPhongMaterial({
+  color: 0x080808,
+  shininess: 10,
+});
+
+const lamp = new THREE.MeshPhongMaterial({
+  color: 0x080808,
+  shininess: 10,
+});
+
 const INITIAL_MAP = [
   { childID: "body", mtl: INITIAL_MTL },
   // { childID: "mirror", mtl: INITIAL_MTL },
-  // { childID: "glass", mtl: INITIAL_MTL },
+  { childID: "glass", mtl: glass },
+  { childID: "lamp", mtl: lamp },
   // { childID: "alloy", mtl: INITIAL_MTL },
   // { childID: "wheel", mtl: INITIAL_MTL },
   { childID: "second_body", mtl: secBody },
 ];
 
-//init object loader
-const loader = new THREE.GLTFLoader();
-loader.load(
-  modelPath,
-  function (gltf) {
-    theModel = gltf.scene;
+function loadGLBModel(modelPath) {
+  //init object loader
+  const loader = new THREE.GLTFLoader();
+  loader.load(
+    modelPath,
+    function (gltf) {
+      theModel = gltf.scene;
 
-    theModel.traverse((o) => {
-      if (o.isMesh) {
-        o.castShadow = true;
-        o.receiveShadow = false;
-        // o.material.side = THREE.DoubleSide;
+      theModel.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = false;
+          // o.material.side = THREE.DoubleSide;
+        }
+      });
+      //set initial scale
+      theModel.scale.set(0.5, 0.5, 0.5);
+      theModel.rotation.y = Math.PI / 5;
+
+      // offset y-position
+      theModel.position.y = -0.4;
+
+      // Set initial textures
+      for (let object of INITIAL_MAP) {
+        initColor(theModel, object.childID, object.mtl);
       }
-    });
-    //set initial scale
-    theModel.scale.set(0.5, 0.5, 0.5);
-    theModel.rotation.y = Math.PI / 5;
 
-    // offset y-position
-    theModel.position.y = -0.4;
-
-    // Set initial textures
-    for (let object of INITIAL_MAP) {
-      initColor(theModel, object.childID, object.mtl);
+      //add model to scene
+      scene.add(theModel);
+    },
+    undefined,
+    function (error) {
+      console.log(error.message);
     }
+  );
+}
 
-    //add model to scene
-    scene.add(theModel);
-  },
-  undefined,
-  function (error) {
-    console.log(error.message);
-  }
-);
+loadGLBModel(modelPath);
 
 // // Function - Add the textures to the models
 function initColor(parent, type, mtl) {
@@ -286,5 +397,18 @@ function initialRotation() {
     theModel.rotation.y += Math.PI / 60;
   } else {
     loaded = true;
+  }
+}
+
+function clearCanvas(model) {
+  let selectedObject = scene.getObjectByName(model.name);
+  try {
+    if (selectedObject) {
+      scene.remove(selectedObject);
+      return true;
+    }
+  } catch (err) {
+    console.log(err.message);
+    return false;
   }
 }
